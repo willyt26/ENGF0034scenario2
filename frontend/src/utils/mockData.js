@@ -12,7 +12,7 @@ export const MOCK_DATA = [
   },
   { 
     id: 2, 
-    title: "Java Coursework Discussion", 
+    title: "Java challenge", 
     description: "blah",
     category: "Study", 
     startTime: "2026-03-05T16:00:00Z",
@@ -23,13 +23,13 @@ export const MOCK_DATA = [
   },
   { 
     id: 3, 
-    title: "Study Session", 
+    title: "Window shopping and coffee", 
     description: "blah",
     category: "Study", 
     startTime: "2026-03-06T18:00:00Z",
     duration: "90",
     participantLimit: 8,
-    location: "Main Library",
+    location: "Oxford Street",
     hostContact: "test3@ucl.ac.uk"
   },
   { 

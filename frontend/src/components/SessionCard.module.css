@@ -77,3 +77,12 @@
   font-weight: bold;
   cursor: pointer;
 }
+
+.joined {
+  border: 2px solid #4CAF50;
+  background-color: #e8f5e9;
+}
+
+.joinedButton {
+  background-color: #4CAF50;
+}
