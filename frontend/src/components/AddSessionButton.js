@@ -1,16 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './AddSessionButton.module.css';
+import SessionForm from './SessionForm';
+
 
 const AddSessionButton = () => {
-    const handleClick = () => {
-        alert("opens session creation component");
-    };
+    const [createOpen, setCreateOpen] = useState(false);
 
-    return (
-    <button className={styles.fab} onClick={handleClick} title="Host a Session">
-        +
-    </button>
-    );
+    return (createOpen ? (<SessionForm />) : 
+    (
+        <button className={styles.fab} onClick={() => setCreateOpen(true)} title="Host a Session">
+            +
+        </button>
+    ))
+
+        
+
+
+    ;
 };
 
 export default AddSessionButton;
