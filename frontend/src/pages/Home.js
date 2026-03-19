@@ -96,6 +96,9 @@ const Home = ({ user }) => {
     if (filter === "Joined") {
       return joinedSessions.includes(session.id);
     }
+    if (filter === "Not Full") {
+      return session.participants.length < session.participantLimit;
+    }
     return true;
   });
 
@@ -135,6 +138,7 @@ const Home = ({ user }) => {
         >
           <option value="All">All Sessions</option>
           <option value="Joined">Joined</option>
+          <option value="Not Full"> Not Full</option>
         </select>
       </div>
 
