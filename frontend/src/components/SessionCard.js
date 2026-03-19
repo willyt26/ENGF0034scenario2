@@ -21,7 +21,7 @@ const SessionCard = ({ session, joined, onJoin, onSelect }) => {
             month: 'short'
         });
     };
-
+    const isFull = session.participants.length >= session.participantLimit;
     return (
         <div
             className={`${styles.card} ${joined ? styles.joined : ""}`}
@@ -53,13 +53,14 @@ const SessionCard = ({ session, joined, onJoin, onSelect }) => {
             </div>
 
             <button
+                disabled={isFull && !joined}
                 className={`${styles.joinButton} ${joined ? styles.joinedButton : ""}`}
                 onClick={(e) => {
                     e.stopPropagation(); // prevents popup when clicking Join
                     onJoin(session.id);
                 }}
             >
-                {joined ? "Disjoin" : "Join"}
+                {joined ? "Disjoin" : isFull ? "Full" : "Join"}
             </button>
 
         </div>

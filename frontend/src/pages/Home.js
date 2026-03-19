@@ -20,7 +20,7 @@ const icons = [
   "/icons/plant-pot_4900495.png"
 ];
 
-const Home = () => {
+const Home = ({ user }) => {
 
   const [filter, setFilter] = useState("All");
   const [joinedSessions, setJoinedSessions] = useState([]);
@@ -76,14 +76,23 @@ const Home = () => {
   /* Join / Disjoin */
   const handleJoin = (id) => {
     setJoinedSessions(prev =>
-      prev.includes(id)
-        ? prev.filter(s => s !== id)
-        : [...prev, id]
+      prev.includes(id) ? prev.filter(s => s !== id) : [...prev, id]
     );
+    setSessions(prev => prev.map(session => {
+      if (session.id!== id){
+        return session
+      }
+      if (joinedSessions.includes(id)) {
+        return { ...session, participants: session.participants.filter(n => n!== user.name)}
+      } else {
+        return { ...session, participants: [...session.participants, user.name] }
+      }
+    }))
   };
 
   /* Filter sessions */
-  const filteredSessions = MOCK_DATA.filter(session => {
+  const [sessions, setSessions] = useState(MOCK_DATA) 
+  const filteredSessions = sessions.filter(session => {
     if (filter === "Joined") {
       return joinedSessions.includes(session.id);
     }
@@ -169,7 +178,8 @@ const Home = () => {
             <p><strong>Location:</strong> {selectedSession.location}</p>
             <p><strong>Description:</strong> {selectedSession.description}</p>
             <p><strong>Duration:</strong> {selectedSession.duration} minutes</p>
-            <p><strong>Participants:</strong> {selectedSession.participantLimit}</p>
+            <p><strong>Spots:</strong> {selectedSession.participants.length}/{selectedSession.participantLimit}</p>
+            <p><strong>Participants:</strong> {selectedSession.participants.join(", ")}</p>
             <p><strong>Contact:</strong> {selectedSession.hostContact}</p>
 
             <button onClick={() => setSelectedSession(null)}>

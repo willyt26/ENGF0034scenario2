@@ -8,7 +8,8 @@ export const MOCK_DATA = [
     duration: "30",
     participantLimit: 4,
     location: "Student Centre - Floor 2",
-    hostContact: "test1@ucl.ac.uk"
+    hostContact: "test1@ucl.ac.uk",
+    participants: ["Albatool", "Hera", "Kelvin", "Will"]
   },
   { 
     id: 2, 
@@ -19,7 +20,8 @@ export const MOCK_DATA = [
     duration: "120",
     participantLimit: 8,
     location: "Science Library",
-    hostContact: "test2@ucl.ac.uk"
+    hostContact: "test2@ucl.ac.uk",
+    participants: ["Albatool", "Hera", "Kelvin", "Will"]
   },
   { 
     id: 3, 
@@ -30,7 +32,8 @@ export const MOCK_DATA = [
     duration: "90",
     participantLimit: 8,
     location: "Oxford Street",
-    hostContact: "test3@ucl.ac.uk"
+    hostContact: "test3@ucl.ac.uk",
+    participants: ["Albatool", "Hera", "Kelvin", "Will"]
   },
   { 
     id: 4, 
@@ -41,6 +44,7 @@ export const MOCK_DATA = [
     duration: "45",
     participantLimit: 3,
     location: "Gordon Square Park",
-    hostContact: "test4@ucl.ac.uk"
+    hostContact: "test4@ucl.ac.uk",
+    participants: ["Albatool", "Hera", "Kelvin"]
   }
 ];
