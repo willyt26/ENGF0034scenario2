@@ -2,7 +2,7 @@ import { motion } from "motion/react";
 import { useState } from "react";
 // import styles from './SessionForm.module.css';
 
-const SessionForm = (onSubmit) => {
+const SessionForm = ({submitSession}) => {
   const [step, setStep] = useState(1);
   const [sessionData, setSessionData] = useState({
     title: "",
@@ -13,7 +13,6 @@ const SessionForm = (onSubmit) => {
     capacity: "",
     postcode: "",
   });
-
   return (
     <>
       {step === 1 && <StepOne setStep={() => setStep(2)} />}
@@ -21,7 +20,7 @@ const SessionForm = (onSubmit) => {
         <StepTwo
           sessionData={sessionData}
           setSessionData={setSessionData}
-          setStep={() => setStep(3)}
+          setStep={() => {setStep(3); submitSession(sessionData);}}
         />
       )}
       {step === 3 && <StepThree />}
@@ -138,7 +137,7 @@ const StepTwo = ({ sessionData, setSessionData, setStep }) => {
       <br />
       <input
         type="datetime-local"
-        name="DEPARTURE:"
+        name="startTime"
         value={sessionData.startTime}
         onChange={handleChange}
         max={maxStartTime}
@@ -175,11 +174,14 @@ const StepTwo = ({ sessionData, setSessionData, setStep }) => {
         title="DESTINATION: Enter a London postcode"
       />
       <br />
-      <button type="submit">Continue</button>
+      <button type="submit" >Continue</button>
     </motion.form>
   );
 };
 
-const StepThree = () => {};
+const StepThree = () => {
+  // whoosh!!! you're all set. 
+  return <div>Receptionist: Enjoy the ride.</div>
+};
 
 export default SessionForm;

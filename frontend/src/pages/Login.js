@@ -6,12 +6,12 @@ const Login = ({ onLogin }) => {
     const [error, setError] = useState("")
 
     const handleSubmit = () => {
-        if (name == "") {
+        if (name === "") {
             setError("No name has been entered")
             return
         }
         if (!email.endsWith("@ucl.ac.uk")) {
-            setError("Invalid email")
+            setError("Invalid email, must be UCL.")
             return    
         }
         onLogin({name, email}) 
@@ -22,7 +22,7 @@ const Login = ({ onLogin }) => {
             <p> Enter name </p>
             <input onChange={(e) => setName(e.target.value)}/>
             <p> Enter email </p>
-            <input onChange={(e) => setEmail(e.target.value)}/>
+            <input onChange={(e) => setEmail(e.target.value)} on/>
             <br/>
             <br/>
             {error && <p>{error}</p>} {/* If error isnt empty display error */}

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import Home from './pages/Home';
-import AddSessionButton from './components/AddSessionButton';
 import Login from './pages/Login';
 
 function App() {
@@ -11,7 +10,6 @@ function App() {
   return (
     <div className="App">
       <Home user={user} />
-      <AddSessionButton />
     </div>
   );
 }
