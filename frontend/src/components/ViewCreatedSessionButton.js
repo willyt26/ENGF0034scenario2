@@ -18,7 +18,7 @@ import { User } from 'lucide-react';
 
 const ViewCreatedSessionButton = ({ session, onSelect }) => {
   return (
-    <button className={styles.fab} onClick={() => onSelect(session)}>
+    <button className={styles.fab} onClick={() => onSelect(session)} title="View Created Session">
       <User/>
     </button>
   );
