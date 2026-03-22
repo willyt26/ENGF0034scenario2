@@ -1,22 +1,17 @@
-import React, { useState } from 'react';
+// src/components/AddSessionButton.js
+import React from 'react';
 import styles from './AddSessionButton.module.css';
-import SessionForm from './SessionForm';
 
-
-const AddSessionButton = ({handleSubmit}) => {
-    const [createOpen, setCreateOpen] = useState(false);
-
-    return (createOpen ? (<SessionForm submitSession={() => {setCreateOpen(false); handleSubmit();} }/>) : 
-    (
-        <button className={styles.fab} onClick={() => setCreateOpen(true)} title="Host a Session">
+const AddSessionButton = ({ onClick }) => {
+    return (
+        <button 
+            className={styles.fab} 
+            onClick={onClick} 
+            title="Host a Session"
+        >
             +
         </button>
-    ))
-
-        
-
-
-    ;
+    );
 };
 
 export default AddSessionButton;

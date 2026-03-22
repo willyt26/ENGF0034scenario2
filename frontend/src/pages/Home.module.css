@@ -100,3 +100,36 @@
   width: 420px;
   max-width: 90%;
 }
+
+.filterWrapper {
+  display: flex;
+  gap: 15px; /* Space between the two dropdowns */
+  margin-bottom: 25px;
+  background: rgba(255, 255, 255, 0.9); /* Solid enough to hide background icons */
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.filterGroup {
+  flex: 1; /* Makes both filters take up equal width */
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #003b5c;
+  text-transform: uppercase;
+}
+
+.select {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+  background-color: white;
+  cursor: pointer;
+}

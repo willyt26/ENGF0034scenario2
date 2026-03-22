@@ -1,14 +1,15 @@
 .card {
   display: flex;
   align-items: center;
-  background: white;
+  background-color: #ffffff; 
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 12px 16px;
   margin-bottom: 12px;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: all 0.2s ease;
   gap: 16px;
+  position: relative; 
 }
 
 .card:hover {
@@ -68,6 +69,24 @@
   color: #222;
 }
 
+.full {
+  background-color: #fff5f5; /* Very soft red/pink */
+  border: 1px solid #feb2b2;
+  cursor: default; /* Change cursor so they know they can't join */
+}
+
+.full:hover {
+  border-color: #fc8181;
+  box-shadow: none; /* Disable shadow on full cards */
+}
+
+/* State: Joined */
+.joined {
+  border: 2px solid #4CAF50;
+  background-color: #e8f5e9; /* Solid light green */
+}
+
+/* Button States */
 .joinButton {
   padding: 8px 16px;
   background-color: #003b5c;
@@ -76,11 +95,12 @@
   border-radius: 6px;
   font-weight: bold;
   cursor: pointer;
+  min-width: 80px;
 }
 
-.joined {
-  border: 2px solid #4CAF50;
-  background-color: #e8f5e9;
+.fullButton {
+  background-color: #a0aec0; /* Neutral grey for 'Full' */
+  cursor: not-allowed;
 }
 
 .joinedButton {

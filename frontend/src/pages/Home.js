@@ -1,12 +1,11 @@
-import { useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import SessionCard from "../components/SessionCard";
+import SessionForm from "../components/SessionForm"; // Added this!
 import { MOCK_DATA } from "../utils/mockData";
 import styles from "./Home.module.css";
-
 import AddSessionButton from "../components/AddSessionButton";
 import ViewCreatedSessionButton from "../components/ViewCreatedSessionButton";
 
-/* Move icons outside component so React doesn't warn about dependencies */
 const icons = [
   "/icons/bacterias_1184566.png",
   "/icons/clock-tower_444725.png",
@@ -24,44 +23,26 @@ const icons = [
 ];
 
 const Home = ({ user }) => {
-  const [filter, setFilter] = useState("All");
+  const [categoryFilter, setCategoryFilter] = useState("All");
+  const [statusFilter, setStatusFilter] = useState("All");
   const [joinedSessions, setJoinedSessions] = useState([]);
   const [selectedSession, setSelectedSession] = useState(null);
   const [createdSession, setCreatedSession] = useState(null);
+  const [sessions, setSessions] = useState(MOCK_DATA);
+  const [showForm, setShowForm] = useState(false); 
 
-  /* Generate decorative icons only once */
   const backgroundIcons = useMemo(() => {
     return Array.from({ length: 80 }).map((_, i) => {
       const icon = icons[Math.floor(Math.random() * icons.length)];
-
       const side = Math.floor(Math.random() * 4);
-
-      let top;
-      let left;
-
-      /* Top edge */
-      if (side === 0) {
-        top = Math.random() * 8;
-        left = Math.random() * 100;
-      } else if (side === 1) {
-      /* Bottom edge */
-        top = 92 + Math.random() * 6;
-        left = Math.random() * 100;
-      } else if (side === 2) {
-      /* Left edge */
-        top = Math.random() * 100;
-        left = Math.random() * 8;
-      } else {
-      /* Right edge */
-        top = Math.random() * 100;
-        left = 92 + Math.random() * 6;
-      }
+      let top, left;
+      if (side === 0) { top = Math.random() * 8; left = Math.random() * 100; }
+      else if (side === 1) { top = 92 + Math.random() * 6; left = Math.random() * 100; }
+      else if (side === 2) { top = Math.random() * 100; left = Math.random() * 8; }
+      else { top = Math.random() * 100; left = 92 + Math.random() * 6; }
 
       return {
-        id: i,
-        src: icon,
-        top,
-        left,
+        id: i, src: icon, top, left,
         rotate: Math.random() * 360,
         opacity: Math.random() * 0.25 + 0.45,
         size: Math.random() * 20 + 25,
@@ -69,58 +50,51 @@ const Home = ({ user }) => {
     });
   }, []);
 
-  /* Join / Disjoin */
   const handleJoin = (id) => {
     setJoinedSessions((prev) =>
-      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id],
+      prev.includes(id) ? prev.filter((s) => s !== id) : [...prev, id]
     );
     setSessions((prev) =>
       prev.map((session) => {
-        if (session.id !== id) {
-          return session;
-        }
+        if (session.id !== id) return session;
         if (joinedSessions.includes(id)) {
-          return {
-            ...session,
-            participants: session.participants.filter((n) => n !== user.name),
-          };
+          return { ...session, participants: session.participants.filter((n) => n !== user.name) };
         } else {
-          return {
-            ...session,
-            participants: [...session.participants, user.name],
-          };
+          return { ...session, participants: [...session.participants, user.name] };
         }
-      }),
+      })
     );
   };
 
-  const handleSubmitSession = (session) => {
-    // Add data not created by user
-    session = {
-      ...session,
-      id: 1 + Math.max(sessions.map((s) => s.id)),
-      participants: [user],
+  const handleSubmitSession = (sessionData) => {
+    const newSession = {
+      ...sessionData,
+      id: Date.now(),
+      participants: [user.name], 
+      category: sessionData.category || "Social",
+      hostContact: user.email,
+      participantLimit: sessionData.capacity // Mapping capacity from form to data
     };
-    // Save it in places
-    setJoinedSessions([...joinedSessions, session]);
-    setCreatedSession(session);
+    
+    setSessions([newSession, ...sessions]); 
+    setJoinedSessions([...joinedSessions, newSession.id]);
+    setCreatedSession(newSession);
+    setShowForm(false); 
   };
 
-  /* Filter sessions */
-  const [sessions, setSessions] = useState(MOCK_DATA);
   const filteredSessions = sessions.filter((session) => {
-    if (filter === "Joined") {
-      return joinedSessions.includes(session.id);
+    const matchesCategory = categoryFilter === "All" || session.category === categoryFilter;
+    let matchesStatus = true;
+    if (statusFilter === "Joined") {
+      matchesStatus = joinedSessions.includes(session.id);
+    } else if (statusFilter === "Not Full") {
+      matchesStatus = session.participants.length < (session.participantLimit || 100);
     }
-    if (filter === "Not Full") {
-      return session.participants.length < session.participantLimit;
-    }
-    return true;
+    return matchesCategory && matchesStatus;
   });
 
   return (
     <div className={styles.container}>
-      {/* Decorative background icons */}
       <div className={styles.backgroundIcons}>
         {backgroundIcons.map((icon) => (
           <img
@@ -129,6 +103,7 @@ const Home = ({ user }) => {
             alt=""
             className={styles.bgIcon}
             style={{
+              position: 'absolute',
               top: `${icon.top}%`,
               left: `${icon.left}%`,
               width: `${icon.size}px`,
@@ -142,17 +117,34 @@ const Home = ({ user }) => {
       <h1 className={styles.title}>UCL Peer-Connect</h1>
 
       <div className={styles.filterWrapper}>
-        <label className={styles.label}>Filter By:</label>
+        <div className={styles.filterGroup}>
+          <label className={styles.label}>Activity:</label>
+          <select
+            className={styles.select}
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+          >
+            <option value="All">All</option>
+            <option value="Chill">Chill</option>
+            <option value="Active">Active / Sports</option>
+            <option value="Food & Drink">Food & Drink</option>
+            <option value="Culture">Culture</option>
+            <option value="Creative">Creative</option>
+          </select>
+        </div>
 
-        <select
-          className={styles.select}
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-        >
-          <option value="All">All Sessions</option>
-          <option value="Joined">Joined</option>
-          <option value="Not Full"> Not Full</option>
-        </select>
+        <div className={styles.filterGroup}>
+          <label className={styles.label}>Status:</label>
+          <select
+            className={styles.select}
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+          >
+            <option value="All">All Sessions</option>
+            <option value="Joined">My Sessions</option>
+            <option value="Not Full">Space Available</option>
+          </select>
+        </div>
       </div>
 
       <div className={styles.list}>
@@ -167,53 +159,35 @@ const Home = ({ user }) => {
             />
           ))
         ) : (
-          <p className={styles.empty}>No {filter} sessions found.</p>
+          <p className={styles.empty}>No {categoryFilter} sessions found with status: {statusFilter}.</p>
         )}
       </div>
 
-      {/* Session Popup */}
       {selectedSession && (
-        <div
-          className={styles.modalOverlay}
-          onClick={() => setSelectedSession(null)}
-        >
+        <div className={styles.modalOverlay} onClick={() => setSelectedSession(null)}>
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
             <h2>{selectedSession.title}</h2>
-
-            <p>
-              <strong>Category:</strong> {selectedSession.category}
-            </p>
-            <p>
-              <strong>Location:</strong> {selectedSession.location}
-            </p>
-            <p>
-              <strong>Description:</strong> {selectedSession.description}
-            </p>
-            <p>
-              <strong>Duration:</strong> {selectedSession.duration} minutes
-            </p>
-            <p>
-              <strong>Spots:</strong> {selectedSession.participants.length}/
-              {selectedSession.participantLimit}
-            </p>
-            <p>
-              <strong>Participants:</strong>{" "}
-              {selectedSession.participants.join(", ")}
-            </p>
-            <p>
-              <strong>Contact:</strong> {selectedSession.hostContact}
-            </p>
-
-            <button onClick={() => setSelectedSession(null)}>Close</button>
+            <p><strong>Category:</strong> {selectedSession.category}</p>
+            <p><strong>Location:</strong> {selectedSession.location || "Bloomsbury"}</p>
+            <p><strong>Description:</strong> {selectedSession.description}</p>
+            <p><strong>Spots:</strong> {selectedSession.participants.length}/{selectedSession.participantLimit}</p>
+            <p><strong>Participants:</strong> {selectedSession.participants.join(", ")}</p>
+            <button className={styles.closeBtn} onClick={() => setSelectedSession(null)}>Close</button>
           </div>
         </div>
       )}
-      {createdSession ? (
-        <ViewCreatedSessionButton
-          onSelect={() => setSelectedSession(createdSession)}
+
+      {showForm && (
+        <SessionForm 
+          handleSubmit={handleSubmitSession} 
+          onClose={() => setShowForm(false)} 
         />
+      )}
+
+      {createdSession ? (
+        <ViewCreatedSessionButton onSelect={() => setSelectedSession(createdSession)} />
       ) : (
-        <AddSessionButton handleSubmit={handleSubmitSession} />
+        <AddSessionButton onClick={() => setShowForm(true)} /> 
       )}
     </div>
   );
