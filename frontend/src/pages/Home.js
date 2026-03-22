@@ -184,11 +184,13 @@ const Home = ({ user }) => {
         />
       )}
 
-      {createdSession ? (
-        <ViewCreatedSessionButton onSelect={() => setSelectedSession(createdSession)} />
-      ) : (
-        <AddSessionButton onClick={() => setShowForm(true)} /> 
-      )}
+      <div className={styles.buttonContainer}>
+        {createdSession && (
+          <ViewCreatedSessionButton onSelect={() => setSelectedSession(createdSession)} />
+        )}
+        
+        <AddSessionButton onClick={() => setShowForm(true)} />
+      </div>
     </div>
   );
 };
