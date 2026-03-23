@@ -42,3 +42,47 @@
   border: 1px solid #ddd;
   box-sizing: border-box;
 }
+
+.input {
+  width: 100%;
+  padding: 9px 12px;
+  margin: 6px 0;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+  color: #333;
+  background: #fafafa;
+  box-sizing: border-box;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.input:focus {
+  border-color: #003b5c;
+  box-shadow: 0 0 0 3px rgba(0, 59, 92, 0.08);
+  background: white;
+}
+
+.submitBtn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 11px;
+  background: #003b5c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 0.03em;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.submitBtn:hover {
+  background: #00527f;
+}
+
+.submitBtn:active {
+  transform: scale(0.98);
+}

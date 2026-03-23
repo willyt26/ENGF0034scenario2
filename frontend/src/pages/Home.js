@@ -5,6 +5,7 @@ import { MOCK_DATA } from "../utils/mockData";
 import styles from "./Home.module.css";
 import AddSessionButton from "../components/AddSessionButton";
 import ViewCreatedSessionButton from "../components/ViewCreatedSessionButton";
+import EditCreatedSessionModal from "../components/EditCreatedSessionModal";
 
 const icons = [
   "/icons/bacterias_1184566.png",
@@ -29,7 +30,8 @@ const Home = ({ user }) => {
   const [selectedSession, setSelectedSession] = useState(null);
   const [createdSession, setCreatedSession] = useState(null);
   const [sessions, setSessions] = useState(MOCK_DATA);
-  const [showForm, setShowForm] = useState(false); 
+  const [showForm, setShowForm] = useState(false);
+  const [showEditCreatedSession, setShowEditCreatedSession] = useState(false);
 
   const backgroundIcons = useMemo(() => {
     return Array.from({ length: 80 }).map((_, i) => {
@@ -79,7 +81,18 @@ const Home = ({ user }) => {
     setSessions([newSession, ...sessions]); 
     setJoinedSessions([...joinedSessions, newSession.id]);
     setCreatedSession(newSession);
-    setShowForm(false); 
+    setShowForm(false);
+  };
+
+  const handleSaveEditedSession = (updatedData) => {
+    const updatedSession = {
+      ...createdSession,
+      ...updatedData,
+      participantLimit: updatedData.capacity,
+    };
+    setSessions((prev) => prev.map((s) => s.id === createdSession.id ? updatedSession : s));
+    setCreatedSession(updatedSession);
+    setShowEditCreatedSession(false);
   };
 
   const filteredSessions = sessions.filter((session) => {
@@ -172,21 +185,29 @@ const Home = ({ user }) => {
             <p><strong>Description:</strong> {selectedSession.description}</p>
             <p><strong>Spots:</strong> {selectedSession.participants.length}/{selectedSession.participantLimit}</p>
             <p><strong>Participants:</strong> {selectedSession.participants.join(", ")}</p>
-            <button className={styles.closeBtn} onClick={() => setSelectedSession(null)}>Close</button>
+            <button className={styles.closeBtn} onClick={() => setSelectedSession(null)}>&times;</button>
           </div>
         </div>
       )}
 
       {showForm && (
-        <SessionForm 
-          handleSubmit={handleSubmitSession} 
-          onClose={() => setShowForm(false)} 
+        <SessionForm
+          handleSubmit={handleSubmitSession}
+          onClose={() => setShowForm(false)}
+        />
+      )}
+
+      {showEditCreatedSession && createdSession && (
+        <EditCreatedSessionModal
+          session={createdSession}
+          onSave={handleSaveEditedSession}
+          onClose={() => setShowEditCreatedSession(false)}
         />
       )}
 
       <div className={styles.buttonContainer}>
         {createdSession && (
-          <ViewCreatedSessionButton onSelect={() => setSelectedSession(createdSession)} />
+          <ViewCreatedSessionButton onSelect={() => setShowEditCreatedSession(true)} />
         )}
         
         <AddSessionButton onClick={() => setShowForm(true)} />

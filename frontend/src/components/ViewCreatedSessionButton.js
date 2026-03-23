@@ -16,9 +16,9 @@ import { User } from 'lucide-react';
 //   );
 // }; // src/components/SessionCard.js
 
-const ViewCreatedSessionButton = ({ session, onSelect }) => {
+const ViewCreatedSessionButton = ({ onSelect }) => {
   return (
-    <button className={styles.fab} onClick={() => onSelect(session)} title="View Created Session">
+    <button className={styles.fab} onClick={onSelect} title="Edit Created Session">
       <User/>
     </button>
   );
