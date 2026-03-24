@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import styles from './SessionForm.module.css';
 
-const SessionForm = ({ handleSubmit, onClose }) => {
+const SessionForm = ({ handleSubmit, onClose, setBin }) => {
   const [step, setStep] = useState(1);
   const [sessionData, setSessionData] = useState({
     title: "",
@@ -25,7 +25,7 @@ const SessionForm = ({ handleSubmit, onClose }) => {
       >
         <button className={styles.closeButton} onClick={onClose}>&times;</button>
 
-        {step === 1 && <StepOne setStep={() => setStep(2)} />}
+        {step === 1 && <StepOne setStep={() => setStep(2)} setBin={setBin}/>}
 
         {step === 2 && (
           <StepTwo
@@ -44,7 +44,7 @@ const SessionForm = ({ handleSubmit, onClose }) => {
   );
 };
 
-const StepOne = ({ setStep }) => {
+const StepOne = ({ setStep, setBin }) => {
   const [topic, setTopic] = useState("");
   const [toThrow, setToThrow] = useState(false);
   const [chat, setChat] = useState("What were you studying?");
@@ -75,6 +75,7 @@ const StepOne = ({ setStep }) => {
         onClick={() => {
           if (topic.trim() === "") return;
           setToThrow(true);
+          setBin(prev => [...prev, { subject: topic, time: Date.now() }])
           setTimeout(sayLeave, 1500);
         }}
       >

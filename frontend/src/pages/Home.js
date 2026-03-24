@@ -6,6 +6,7 @@ import styles from "./Home.module.css";
 import AddSessionButton from "../components/AddSessionButton";
 import ViewCreatedSessionButton from "../components/ViewCreatedSessionButton";
 import EditCreatedSessionModal from "../components/EditCreatedSessionModal";
+import SubjectBin from "../components/SubjectBin";
 
 const icons = [
   "/icons/bacterias_1184566.png",
@@ -32,6 +33,7 @@ const Home = ({ user }) => {
   const [sessions, setSessions] = useState(MOCK_DATA);
   const [showForm, setShowForm] = useState(false);
   const [showEditCreatedSession, setShowEditCreatedSession] = useState(false);
+  const [bin, setBin] = useState([])
 
   const backgroundIcons = useMemo(() => {
     return Array.from({ length: 80 }).map((_, i) => {
@@ -194,6 +196,7 @@ const Home = ({ user }) => {
         <SessionForm
           handleSubmit={handleSubmitSession}
           onClose={() => setShowForm(false)}
+          setBin={setBin}
         />
       )}
 
@@ -206,6 +209,7 @@ const Home = ({ user }) => {
       )}
 
       <div className={styles.buttonContainer}>
+        <SubjectBin bin={bin} />
         {createdSession && (
           <ViewCreatedSessionButton onSelect={() => setShowEditCreatedSession(true)} />
         )}
