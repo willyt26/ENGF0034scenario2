@@ -1,7 +1,7 @@
 // src/components/SessionForm.js
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import styles from './SessionForm.module.css';
+import { AnimatePresence, motion } from "framer-motion";
+import { useState } from "react";
+import styles from "./SessionForm.module.css";
 
 const SessionForm = ({ handleSubmit, onClose, setBin }) => {
   const [step, setStep] = useState(1);
@@ -23,9 +23,11 @@ const SessionForm = ({ handleSubmit, onClose, setBin }) => {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: "spring", damping: 25, stiffness: 300 }}
       >
-        <button className={styles.closeButton} onClick={onClose}>&times;</button>
+        <button className={styles.closeButton} onClick={onClose}>
+          &times;
+        </button>
 
-        {step === 1 && <StepOne setStep={() => setStep(2)} setBin={setBin}/>}
+        {step === 1 && <StepOne setStep={() => setStep(2)} setBin={setBin} />}
 
         {step === 2 && (
           <StepTwo
@@ -67,7 +69,8 @@ const StepOne = ({ setStep, setBin }) => {
         value={topic}
         onChange={(e) => setTopic(e.target.value)}
       />
-      <br /><br />
+      <br />
+      <br />
       <Book topic={topic} toThrow={toThrow} />
       <br />
       <button
@@ -75,7 +78,7 @@ const StepOne = ({ setStep, setBin }) => {
         onClick={() => {
           if (topic.trim() === "") return;
           setToThrow(true);
-          setBin(prev => [...prev, { subject: topic, time: Date.now() }])
+          setBin((prev) => [...prev, { subject: topic, time: Date.now() }]);
           setTimeout(sayLeave, 1500);
         }}
       >
@@ -87,7 +90,8 @@ const StepOne = ({ setStep, setBin }) => {
 
 const StepTwo = ({ sessionData, setSessionData, setStep }) => {
   const [launching, setLaunching] = useState(false);
-  const londonPostcodePattern = "^(E|EC|N|NW|SE|SW|W|WC)([0-9]{1,2}|[0-9][A-Z]|[A-Z][0-9]|[A-Z][0-9][A-Z])\\s?[0-9][A-Z]{2}$";
+  const londonPostcodePattern =
+    "^(E|EC|N|NW|SE|SW|W|WC)([0-9]{1,2}|[0-9][A-Z]|[A-Z][0-9]|[A-Z][0-9][A-Z])\\s?[0-9][A-Z]{2}$";
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -155,7 +159,7 @@ const StepTwo = ({ sessionData, setSessionData, setStep }) => {
         onChange={handleChange}
         max={maxStartTime}
       />
-      <div style={{ display: 'flex', gap: '10px' }}>
+      <div style={{ display: "flex", gap: "10px" }}>
         <input
           className={styles.input}
           type="number"
@@ -186,21 +190,25 @@ const StepTwo = ({ sessionData, setSessionData, setStep }) => {
         pattern={londonPostcodePattern}
         title="DESTINATION: Enter a London postcode"
       />
-      <button type="submit" className={styles.submitBtn}>Launch Mission</button>
+      <button type="submit" className={styles.submitBtn}>
+        Launch Mission
+      </button>
     </motion.form>
   );
 };
 
 const DepartureBoard = ({ sessionData }) => {
   const formatTime = (iso) => {
-    if (!iso) return '-- : --';
+    if (!iso) return "-- : --";
     const d = new Date(iso);
-    return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
   const formatDate = (iso) => {
-    if (!iso) return '------';
+    if (!iso) return "------";
     const d = new Date(iso);
-    return d.toLocaleDateString([], { day: '2-digit', month: 'short' }).toUpperCase();
+    return d
+      .toLocaleDateString([], { day: "2-digit", month: "short" })
+      .toUpperCase();
   };
 
   return (
@@ -208,26 +216,37 @@ const DepartureBoard = ({ sessionData }) => {
       <div className={styles.boardHeader}>DEPARTURES</div>
       <div className={styles.boardRow}>
         <span className={styles.boardLabel}>DEPARTS</span>
-        <span className={styles.boardValue}>{formatTime(sessionData.startTime)}</span>
-        <span className={styles.boardDate}>{formatDate(sessionData.startTime)}</span>
+        <span className={styles.boardValue}>
+          {formatTime(sessionData.startTime)}
+        </span>
+        <span className={styles.boardDate}>
+          {formatDate(sessionData.startTime)}
+        </span>
       </div>
       <div className={styles.boardDivider} />
       <div className={styles.boardRow}>
         <span className={styles.boardLabel}>TO</span>
         <span className={styles.boardValue}>
-          {sessionData.postcode || '_ _ _ _ _ _'}
+          {sessionData.postcode || "_ _ _ _ _ _"}
         </span>
       </div>
       <div className={styles.boardRow}>
         <span className={styles.boardLabel}>SHIP</span>
-        <span className={styles.boardValue} style={{ fontSize: '0.75rem', letterSpacing: '0.1em' }}>
-          {sessionData.title || '_ _ _ _ _ _ _ _ _'}
+        <span
+          className={styles.boardValue}
+          style={{ fontSize: "0.75rem", letterSpacing: "0.1em" }}
+        >
+          {sessionData.title || "_ _ _ _ _ _ _ _ _"}
         </span>
       </div>
       <div className={styles.boardRow}>
         <span className={styles.boardLabel}>SEATS</span>
-        <span className={styles.boardValue}>{sessionData.capacity || '--'}</span>
-        <span className={styles.boardDate}>{sessionData.category || '------'}</span>
+        <span className={styles.boardValue}>
+          {sessionData.capacity || "--"}
+        </span>
+        <span className={styles.boardDate}>
+          {sessionData.category || "------"}
+        </span>
       </div>
     </div>
   );
@@ -241,13 +260,9 @@ const Spaceship = ({ capacity, launching }) => {
     <div className={styles.shipViewport}>
       <motion.div
         className={styles.shipWrapper}
-        animate={launching
-          ? { x: '140vw', opacity: 1 }
-          : { x: 0, opacity: 1 }
-        }
-        transition={launching
-          ? { duration: 0.75, ease: [0.4, 0, 1, 1] }
-          : { duration: 0 }
+        animate={launching ? { x: "140vw", opacity: 1 } : { x: 0, opacity: 1 }}
+        transition={
+          launching ? { duration: 0.75, ease: [0.4, 0, 1, 1] } : { duration: 0 }
         }
       >
         {/* Engines — back (left) */}
@@ -280,7 +295,12 @@ const Spaceship = ({ capacity, launching }) => {
                   className={styles.seat}
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
-                  transition={{ type: 'spring', stiffness: 400, damping: 20, delay: i * 0.015 }}
+                  transition={{
+                    type: "spring",
+                    stiffness: 400,
+                    damping: 20,
+                    delay: i * 0.015,
+                  }}
                 />
               ))}
               {count === 0 && (
@@ -300,9 +320,12 @@ const Spaceship = ({ capacity, launching }) => {
 
 const StepThree = ({ onClose }) => {
   return (
-    <div style={{ textAlign: "center", padding: '20px' }}>
-      <h2 style={{ fontSize: '3rem', margin: '0 0 14px' }}>🚀</h2>
-      <div className={styles.receptionistRow} style={{ justifyContent: 'center' }}>
+    <div style={{ textAlign: "center", padding: "20px" }}>
+      <h2 style={{ fontSize: "3rem", margin: "0 0 14px" }}>🚀</h2>
+      <div
+        className={styles.receptionistRow}
+        style={{ justifyContent: "center" }}
+      >
         <span className={styles.receptionistAvatar}>👩‍💼</span>
         <div className={styles.speechBubble}>Enjoy the ride.</div>
       </div>
@@ -317,10 +340,15 @@ const Book = ({ topic, toThrow }) => {
   return (
     <motion.div
       style={{ display: "inline-block", fontSize: "2rem" }}
-      animate={toThrow ? { x: 600, y: -400, rotate: 720, opacity: 0 } : { x: 0, y: 0, opacity: 1 }}
+      animate={
+        toThrow
+          ? { x: -800, y: 400, rotate: 720, opacity: 0 }
+          : { x: 0, y: 0, opacity: 1 }
+      }
       transition={{ duration: 1.5, ease: "easeIn" }}
     >
-      📕<span style={{ fontSize: '1rem', verticalAlign: 'middle' }}>{topic}</span>
+      📕
+      <span style={{ fontSize: "1rem", verticalAlign: "middle" }}>{topic}</span>
     </motion.div>
   );
 };
